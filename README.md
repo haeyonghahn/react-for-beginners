@@ -1,12 +1,17 @@
 # React-For-Beginners
 ## 목차
 * **[The Basics of React](#the-basics-of-react)**
-    * **[Before React](#before-react)**
-    * **[Our First React Element](#Our-First-React-Element)**
-    * **[Events in React](#events-in-react)**
-    * **[JSX](#jsx)**
+   * **[Before React](#before-react)**
+   * **[Our First React Element](#Our-First-React-Element)**
+   * **[Events in React](#events-in-react)**
+   * **[JSX](#jsx)**
       * **[Babel](#Babel)**
       * **[JSX part Two](#jsx-part-two)**
+* **[STATE](#state)**
+   * **[Understanding State](#understanding-state)**
+      * **[setState part One](#setstate-part-one)**
+      * **[setState part Two](#setstate-part-two)**
+   * **[State Functions](#state-functions)**
 
 ## The Basics of React
 ### Before React
@@ -191,4 +196,104 @@ JSX로 적은 코드를 브라우저가 이해할 수 있는 형태로 바꿔주
     ReactDOM.render(<Container />, root);
   </script>
 </html>
+```
+
+## STATE
+### Understanding State
+ReactJS는 이전에 렌더링된 컴포넌트가 어떤 것인지 확인하고 다른 부분만 파악한다. `Total clicks`을 다시 생성할 필요가 없고 `button` 도 다시 생성할 필요가 없다. 오로지 바뀐 부분만 업데이트 해준다. 즉, 인터렉티브한 어플을 만들 수 있다는 의미이다. 여러가지 요소들을 리렌더링하려고 해도 전부 다 새로 생성되진 않을 것이다. 오로지 바뀐 부분만 생성된다.
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 10;
+    function countUp() {
+      counter = counter + 1;
+      render();
+    }
+    function render() {
+      ReactDOM.render(<Container />, root);
+    }
+    const Container = () => (
+      <div>
+        <h3>Total clicks: {counter}</h3>
+        <button onClick={countUp}>Click me</button>
+      </div>
+    );
+    ReactDOM.render(<Container />, root);
+  </script>
+</html>
+```
+
+#### setState part One
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+      const [counter, modifier] = React.useState(0); // [0, f]
+      return (
+        <div>
+          <h3>Total clicks: {counter}</h3>
+          <button>Click me</button>
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+```
+
+#### setState part Two
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+      const [counter, setCounter] = React.useState(0); // [0, f]
+      const onClick = () => {
+        setCounter(counter + 1);
+      };
+      return (
+        <div>
+          <h3>Total clicks: {counter}</h3>
+          <button onClick={onClick}>Click me</button>
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+```
+
+### State Functions
+state 를 바꾸는 두 가지 방법   
+1. setCounter(값)
+2. setCounter(이전 값을 이용하여, 값을 변경)하는 방법
+이 괄호 안에는 함수가 들어갈 수도 있는데, 이 함수 안에서 current가 현재의 counter임이 보장되고, current+1을 함으로서, 외부에서 counter의 값이 변경되더라도 이 함수 안에서 값은 안전하게 반환될 수 있게 한다.   
+```javascript
+const onClick = () => {
+  // setCounter(counter + 1);
+  setCounter((current) => current + 1);
+};
 ```
