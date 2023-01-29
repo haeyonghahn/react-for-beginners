@@ -4,6 +4,9 @@
     * **[Before React](#before-react)**
     * **[Our First React Element](#Our-First-React-Element)**
     * **[Events in React](#events-in-react)**
+    * **[JSX](#jsx)**
+      * **[Babel](#Babel)**
+      * **[JSX part Two](#jsx-part-two)**
 
 ## The Basics of React
 ### Before React
@@ -70,3 +73,122 @@ React JS에서는 모든 것이 JavaScript로 시작해서 HTML이 되는 방식
 ```
 
 ### Events in React
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script>
+    const root = document.getElementById("root");
+    const h3 = React.createElement(
+      "h3",
+      {
+        id: "title",
+        onMouseEnter: () => console.log("mouse enter"),
+        style: {
+          backgroundColor: "tomato",
+        },
+      },
+      "Hello I'm a span"
+    );
+    const btn = React.createElement(
+      "button",
+      {
+        onClick: () => console.log("i'm clicked"),
+      },
+      "Click me"
+    );
+    const container = React.createElement("div", null, [h3, btn]);
+    ReactDOM.render(container, root);
+  </script>
+</html>
+```
+
+### JSX
+JSX는 JavaScript를 확장한 문법이다.
+```javascript
+const Title = (
+   <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+     "Hello I'm a title"
+   </h3>
+ );
+```
+#### Babel
+https://babeljs.io/   
+JSX로 적은 코드를 브라우저가 이해할 수 있는 형태로 바꿔주는 것이다.   
+![image](https://user-images.githubusercontent.com/31242766/215336840-ea8355c6-c6de-4b0a-95e9-13af0db4b25d.png)   
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    const Title = (
+      <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+        "Hello I'm a title"
+      </h3>
+    );
+    const Button = (
+      <button
+        style={{
+          backgroundColor: "tomato",
+        }}
+        onClick={() => console.log("i'm clicked")}
+      >
+        Click me
+      </button>
+    );
+    const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(container, root);
+  </script>
+</html>
+```
+
+#### JSX part Two
+컴포넌트의 첫 글자는 반드시 대문자여야 한다.
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    function Title() {
+      return (
+        <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
+          "Hello I'm a title"
+        </h3>
+      );
+    }
+    const Button = () => (
+      <button
+        style={{
+          backgroundColor: "tomato",
+        }}
+        onClick={() => console.log("i'm clicked")}
+      >
+        Click me
+      </button>
+    );
+    const Container = () => (
+      <div>
+        <Title />
+        <Button />
+      </div>
+    );
+    ReactDOM.render(<Container />, root);
+  </script>
+</html>
+```
