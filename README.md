@@ -11,6 +11,7 @@
    * **[Understanding State](#understanding-state)**
       * **[setState part One](#setstate-part-one)**
       * **[setState part Two](#setstate-part-two)**
+   * **[State Functions](#state-functions)**
 
 ## The Basics of React
 ### Before React
@@ -283,4 +284,16 @@ ReactJS는 이전에 렌더링된 컴포넌트가 어떤 것인지 확인하고 
     ReactDOM.render(<App />, root);
   </script>
 </html>
+```
+
+### State Functions
+state 를 바꾸는 두 가지 방법   
+1. setCounter(값)
+2. setCounter(이전 값을 이용하여, 값을 변경)하는 방법
+이 괄호 안에는 함수가 들어갈 수도 있는데, 이 함수 안에서 current가 현재의 counter임이 보장되고, current+1을 함으로서, 외부에서 counter의 값이 변경되더라도 이 함수 안에서 값은 안전하게 반환될 수 있게 한다.   
+```javascript
+const onClick = () => {
+  // setCounter(counter + 1);
+  setCounter((current) => current + 1);
+};
 ```
