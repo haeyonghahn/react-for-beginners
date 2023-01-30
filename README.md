@@ -18,6 +18,7 @@
       * **[Final Practice and Recap](#final-practice-and-recap)**
 * **[PROPS](#props)**
    * **[Props](#props)**
+   * **[Memo(Memorize)](#memomemorize)**
 
 ## The Basics of React
 ### Before React
@@ -578,3 +579,57 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
   </script>
 </html>
 ```
+
+### Memo(Memorize)
+`App` 컴포넌트의 state 값인 `value` 값이 변경되면서 App 하위 컴포넌트인 `Continue` 컴포넌트까지 다시 `re-render` 된다. 하지만 `Continue`는 변경된 사항이 없기 때문에 변하지 않도록 하는 것이 최적화 성능에 좋다. 그래서 우리는 `props`, `Memo` 를 통해 컴포넌트가 다시 그릴지 어떨지 결정할 수 있다. 아래의 소스에서 `App` 컴포넌트의 state 값인 `value` 는 첫번째 `Btn` 에 전달되지만 두번째 `Btn` 엔 전달되지 않는다. 그렇다면 첫번째 `Btn` 만 `re-render` 되도록 하고 두번째 `Btn`은 안되도록 하자.
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    //function Btn(props) {
+    function Btn({ text, changeValue }) {
+      console.log(text, "was rendered");
+      return (
+        <button
+          onClick={changeValue}
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize: 16,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+    const MemorizedBtn = React.memo(Btn);
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        <div>
+          {/*<Btn text={value} changeValue={changeValue} />
+          <Btn text="Continue" />*/}
+          <MemorizedBtn text={value} changeValue={changeValue} />
+          <MemorizedBtn text="Continue" />
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+```
+1. `render` 시    
+![image](https://user-images.githubusercontent.com/31242766/215431148-f99df5d0-42ee-453e-a9a5-c7a3f36a5f67.png)   
+2. 첫번째 버튼 클릭 후 `re-render`   
+![image](https://user-images.githubusercontent.com/31242766/215431319-278fd2a5-4b1f-4934-a1bf-9099e232ee3c.png)
