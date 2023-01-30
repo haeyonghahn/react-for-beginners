@@ -19,6 +19,7 @@
 * **[PROPS](#props)**
    * **[Props](#props)**
    * **[Memo(Memorize)](#memomemorize)**
+   * **[Prop Types](#prop-types)**
 
 ## The Basics of React
 ### Before React
@@ -633,3 +634,5 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
 ![image](https://user-images.githubusercontent.com/31242766/215431148-f99df5d0-42ee-453e-a9a5-c7a3f36a5f67.png)   
 2. 첫번째 버튼 클릭 후 `re-render`   
 ![image](https://user-images.githubusercontent.com/31242766/215431319-278fd2a5-4b1f-4934-a1bf-9099e232ee3c.png)
+
+### Prop Types
