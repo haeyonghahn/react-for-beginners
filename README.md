@@ -636,3 +636,52 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
 ![image](https://user-images.githubusercontent.com/31242766/215431319-278fd2a5-4b1f-4934-a1bf-9099e232ee3c.png)
 
 ### Prop Types
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    //function Btn(props) {
+    function Btn({ text, fontSize }) {
+      console.log(text, "was rendered");
+      return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+    Btn.propTypes = {
+      text: PropTypes.string.isRequired,
+      fontSize: PropTypes.number.isRequired,
+    };
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+      const changeValue = () => setValue("Revert Changes");
+      return (
+        <div>
+          <Btn text={value} fontSize={18} />
+          <Btn text={14} fontSize={"Continue"} />
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+```
+![image](https://user-images.githubusercontent.com/31242766/215494779-1c948e7b-8a88-4b0d-91b5-8d1ccfceaf50.png)
