@@ -16,6 +16,8 @@
       * **[State Practice part One](#state-practice-part-one)**
       * **[State Practice part Two](#state-practice-part-two)**
       * **[Final Practice and Recap](#final-practice-and-recap)**
+* **[PROPS](#props)**
+   * **[Props](#props)**
 
 ## The Basics of React
 ### Before React
@@ -524,6 +526,51 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
           <hr />
           {index === "0" ? <MinutesToHours /> : null}
           {index === "1" ? <KmToMiles /> : null}
+        </div>
+      );
+    }
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
+```
+
+## PROPS
+### Props
+`Pros` 는 일종의 방식이다. 부모 컴포넌트로부터 자식 컴포넌트에 데이터를 보낼 수 있는 방식이다. `Pros` 는 첫번째 인자이자 유일한 인자이다.
+```java
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const root = document.getElementById("root");
+    //function Btn(props) {
+    function Btn({ text, big }) {
+      return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+            fontSize: big ? 18 : 16,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+    function App() {
+      return (
+        <div>
+          {/*Btn({banana: "save changes", x: false})*/}
+          <Btn text="Save Changes" big={true} />
+          <Btn text="Continue" />
         </div>
       );
     }
