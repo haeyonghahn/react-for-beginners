@@ -22,6 +22,7 @@
    * **[Prop Types](#prop-types)**
 * **[CREATE REACT APP](#create-react-app)**
    * **[Introduction](#introduction)**
+   * **[Tour of CRA](#tour-of-cra)**
 
 ## The Basics of React
 ### Before React
@@ -694,3 +695,5 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
 npx create-react-app 프로젝트명
 ```
 https://github.com/haeyonghahn/react-for-beginners/tree/master/create-react-app
+
+### Tour of CRA
