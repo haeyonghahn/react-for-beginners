@@ -20,6 +20,8 @@
    * **[Props](#props)**
    * **[Memo(Memorize)](#memomemorize)**
    * **[Prop Types](#prop-types)**
+* **[CREATE REACT APP](#create-react-app)**
+   * **[Introduction](#introduction)**
 
 ## The Basics of React
 ### Before React
@@ -685,3 +687,9 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
 </html>
 ```
 ![image](https://user-images.githubusercontent.com/31242766/215494779-1c948e7b-8a88-4b0d-91b5-8d1ccfceaf50.png)
+
+## CREATE REACT APP
+### Introduction
+```shell
+npx create-react-app 프로젝트명
+```
