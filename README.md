@@ -452,6 +452,7 @@ ReactJS 에서 `input` 은 `uncontrolled` 이다.
 ```
 
 ### Final Practice and Recap
+드롭다운리스트를 추가하여 `Minutes -> Hours` 로 바꾸는 것 외에 `Km -> Miles` 로 바꾸는 것을 만들어보자.
 ```javascript
 <!DOCTYPE html>
 <html lang="en">
