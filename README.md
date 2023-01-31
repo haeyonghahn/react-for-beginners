@@ -25,7 +25,7 @@
    * **[Tour of CRA](#tour-of-cra)**
 * **[EFFECTS](#effects)**
    * **[Introduction](#introduction)**
-   * **[useEffect](#useffect)**
+   * **[useEffect](#useeffect)**
    * **[useEffect를 더 깊게 알아보기](#useeffect를-더-깊게-알아보기)**
 
 ## The Basics of React
