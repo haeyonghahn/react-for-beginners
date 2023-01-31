@@ -716,6 +716,30 @@ https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
  ┣ 📜 package-lock.json
  ┗ 📜 package.json
 ```
+__App.js__   
+```javascript
+import Button from "./Button";
+import styles from "./App.module.css";
+
+function App() {
+  return (
+    <div>
+      <h1 className={styles.title}>Welcome back!</h1>
+      <Button text={"Continue"} />
+    </div>
+  );
+}
+
+export default App;
+```
+__App.module.css__   
+```javascript
+.title {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 18px;
+}
+```
 __Button.js__   
 ```javascript
 import PropTypes from "prop-types";
