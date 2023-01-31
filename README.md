@@ -17,7 +17,7 @@
       * **[State Practice part Two](#state-practice-part-two)**
       * **[Final Practice and Recap](#final-practice-and-recap)**
 * **[PROPS](#props)**
-   * **[Props](#props)**
+   * **[props-1](#props-1)**
    * **[Memo(Memorize)](#memomemorize)**
    * **[Prop Types](#prop-types)**
 * **[CREATE REACT APP](#create-react-app)**
