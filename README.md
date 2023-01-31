@@ -809,6 +809,8 @@ root.render(
 ![image](https://user-images.githubusercontent.com/31242766/215640721-82d4b4d7-0128-4eb8-90d9-0d8361be2c37.png)
 
 ### useEffect
+- 첫번째 인자 : argument
+- 두번째 인자 : dependency(의존성) 
 ```javascript
 import { useState, useEffect } from "react";
 
