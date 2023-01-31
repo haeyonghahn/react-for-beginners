@@ -28,6 +28,7 @@
    * **[Introduction](#introduction-1)**
    * **[useEffect](#useeffect)**
    * **[useEffect를 더 깊게 알아보기](#useeffect를-더-깊게-알아보기)**
+   * **[Cleanup function](#cleanup-function)**
 
 ## The Basics of React
 ### Before React
@@ -881,6 +882,54 @@ function App() {
       />
       <h1>{counter}</h1>
       <button onClick={onClick}>Click me</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Cleanup function
+컴포넌트가 `destroy` 될 때(`showing === false`) 무엇인가 할 수 있도록 하는 것이다. 예를 들어, 컴포넌트가 `destroy` 될 때 어떤 분석 결과를 보내고 싶어할 수도 있다. 중요한 건 컴포넌트가 `create` 됐는지 `destroy` 됐는지 알 수 있다는 것이다. react 앱을 만들 때에는 주로 `destroyedFn` 이 필요하진 않다.
+```javascript
+import { useState, useEffect } from "react";
+
+function Hello() {
+  // 첫번째 방법
+  /*function destroyedFn() {
+    console.log("destroyed :(");
+  }
+  function createdFn() {
+    console.log("created :)");
+    return destroyedFn;
+  }
+  useEffect(createdFn, []);*/
+
+  // 두번째 방법
+  useEffect(() => {
+    console.log("created :)");
+    // 컴포넌트가 destory 될 때 실행 될 function
+    return () => console.log("destroyed :(");
+  }, []);
+
+  // 세번째 방법
+  /*useEffect(function () {
+    console.log("created :)");
+    return function () {
+      console.log("destroyed :(");
+    };
+  }, []);*/
+
+  return <h1>Hello</h1>;
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
+  return (
+    <div>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
