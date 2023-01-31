@@ -24,7 +24,7 @@
    * **[Introduction](#introduction)**
    * **[Tour of CRA](#tour-of-cra)**
 * **[EFFECTS](#effects)**
-   * **[Introduction](#introduction)**
+   * **[Introduction](#introduction-1)**
    * **[useEffect](#useeffect)**
    * **[useEffect를 더 깊게 알아보기](#useeffect를-더-깊게-알아보기)**
 
