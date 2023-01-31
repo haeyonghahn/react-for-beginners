@@ -697,3 +697,44 @@ npx create-react-app 프로젝트명
 https://github.com/haeyonghahn/react-for-beginners/tree/master/create-react-app
 
 ### Tour of CRA
+__library__   
+```shell
+npm i prop-type
+```
+__project structure__   
+https://unicode-table.com/kr/blocks/box-drawing/   
+https://emojipedia.org/package/    
+https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md   
+```
+📦 create-react-app
+ ┣ 📂 public
+ ┣ 📂 src
+ ┃ ┣ 📜 App.js
+ ┃ ┣ 📜 App.module.css
+ ┃ ┣ 📜 Button.js
+ ┃ ┣ 📜 Button.module.css
+ ┣ 📜 package-lock.json
+ ┗ 📜 package.json
+```
+__Button.js__   
+```javascript
+import PropTypes from "prop-types";
+import styles from "./Button.module.css";
+
+function Button({ text }) {
+  return <button className={styles.btn}>{text}</button>;
+}
+
+Button.propTypes = {
+  text: PropTypes.string.isRequired,
+};
+
+export default Button;
+```
+__Button.module.css__   
+```css
+.btn {
+  color: white;
+  background-color: tomato;
+}
+```
