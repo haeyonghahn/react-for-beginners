@@ -23,6 +23,10 @@
 * **[CREATE REACT APP](#create-react-app)**
    * **[Introduction](#introduction)**
    * **[Tour of CRA](#tour-of-cra)**
+* **[EFFECTS](#effects)**
+   * **[Introduction](#introduction)**
+   * **[useEffect](#useffect)**
+   * **[useEffect를 더 깊게 알아보기](#useeffect를-더-깊게-알아보기)**
 
 ## The Basics of React
 ### Before React
@@ -761,4 +765,122 @@ __Button.module.css__
   color: white;
   background-color: tomato;
 }
+```
+
+## EFFECTS
+### Introduction
+컴포넌트가 처음 `render`될 때만 코드가 실행되길 원할 수가 있다. 첫번째 `reander` 에만 코드가 실행되고 다른 `state` 변화에는 실행되지 않도록 하길 원할 수도 있다. 예를 들어, API를 통해 데이터를 가져올 때 첫번째 `컴포넌트 render` 에서 API 를 call 하고 이후에 `state` 가 변화할 때 API에서 또 다시 가져오고 싶지 않을 것이다. 이러한 경우에 `useEffect` 를 사용한다.   
+
+__API를 통해 데이터를 가져올 때__   
+아래의 코드의 경우 `state` 가 변할 때마다 `컴포넌트 render`되면서 API를 호출하게 될 것이다.
+```javascript
+import { useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+  console.log("call an api");
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click me</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+> 참고 : 첫 렌더링 시 `render` 가 두 번씩 찍히는 현상은 `index.js` 에서 `React.StrictMode` 때문이다. `StrictMode` 는 `create-react-app` 설치하면 기본적으로 생성되어 있는 태그인데 해당 태그로 감싸져 있는 경우에는 코드의 문제를 감지하고 경고하기 위해서 구성 요소를 두 번 렌더링한다.   
+
+__index.js__   
+```javascript
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+![image](https://user-images.githubusercontent.com/31242766/215640721-82d4b4d7-0128-4eb8-90d9-0d8361be2c37.png)
+
+### useEffect
+```javascript
+import { useState, useEffect } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+  console.log("i run all the time");
+  useEffect(() => {
+    console.log("call the api...");
+  }, []);
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click me</button>
+    </div>
+  );
+}
+
+export default App;
+```
+![image](https://user-images.githubusercontent.com/31242766/215647655-6f0a4979-07ce-452b-adb7-20d0b237c0cb.png)
+
+> 참고 : useMemo vs useEffect   
+`useMemo` 의 경우 `생성` 함수에 관련된 기능이다. 생성자 함수가 고비용(처리 시간이 오래 걸리는 등)인 경우 렌더링마다 계산하는 것은 처리 시간이 오래 걸리므로 값을 기억해놓고 의존성이 변경되었을 경우에만 다시 계산해주는 기능이다. `useEffect` 의 경우는 api 호출, 타이머 등 렌더링 과정에서 한 번만 호출해도 될 기능이 렌더링마다 실행되거나 호출 과정에서 렌더링에 영향을 끼칠 수 있는 것을 모아서 따로 처리하기 위한 기능이다.
+>
+> 둘의 결정적인 차이는 `useEffect` 는 컴포넌트의 렌더링이 완료된 후에 실행되지만 `useMemo` 는 렌더링 중에 실행되는 차이가 있다.   
+
+### useEffect를 더 깊게 알아보기
+해당 목차에서는 아래 코드를 예시로 `search keyword` 에 변화가 있을 때만 검색하도록 하고 것이고 `counter` 가 변화할 때에는 검색하지 않도록 하고 싶은 것이다. 해당 부분을 특정한 부분만 변화했을 때 원하는 코드를 실행할 수 있는 방법을 배워보자. 즉, `keyword state` 가 변화했을 때만 사용자가 원하는 것을 검색할 수 있도록 해보자.
+```javascript
+import { useState, useEffect } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const onClick = () => setValue((prev) => prev + 1);
+  const onChange = (event) => setKeyword(event.target.value);
+  console.log("i run all the time");
+  /*
+   * 처음 렌더링될 때 한 번만 실행
+   * react가 지켜볼 것이 없으니 처음 한 번만 실행된다.
+   */
+  useEffect(() => {
+    console.log("i run only once. ex) call the api...");
+  }, []);
+  /*
+   * keyword 가 변화할 때만 실행
+   * react가 지켜볼 것이 keyword 가 있다.
+   * keyword 가 변화할 때 실행된다.
+   */
+  useEffect(() => {
+    // 첫 렌더링될 때 실행되는 것을 방지하기 위한 keyword 조건
+    if (keyword !== "" && keyword.length > 5) {
+      console.log("i run when 'keyword' changes.", keyword);
+    }
+  }, [keyword]);
+  useEffect(() => {
+    console.log("i run when 'counter' changes.", counter);
+  }, [counter]);
+  return (
+    <div>
+      <input
+        value={keyword}
+        onChange={onChange}
+        type="text"
+        placeholder="Search here..."
+      />
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click me</button>
+    </div>
+  );
+}
+
+export default App;
 ```
