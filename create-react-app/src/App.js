@@ -1,42 +1,41 @@
 import { useState, useEffect } from "react";
 
-function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => setValue((prev) => prev + 1);
-  const onChange = (event) => setKeyword(event.target.value);
-  console.log("i run all the time");
-  /*
-   * 처음 렌더링될 때 한 번만 실행
-   * react가 지켜볼 것이 없으니 처음 한 번만 실행된다.
-   */
+function Hello() {
+  // 첫번째 방법
+  /*function destroyedFn() {
+    console.log("destroyed :(");
+  }
+  function createdFn() {
+    console.log("created :)");
+    return destroyedFn;
+  }
+  useEffect(createdFn, []);*/
+
+  // 두번째 방법
   useEffect(() => {
-    console.log("i run only once. ex) call the api...");
+    console.log("created :)");
+    // 컴포넌트가 destory 될 때 실행 될 function
+    return () => console.log("destroyed :(");
   }, []);
-  /*
-   * keyword 가 변화할 때만 실행
-   * react가 지켜볼 것이 keyword 가 있다.
-   * keyword 가 변화할 때 실행된다.
-   */
-  useEffect(() => {
-    // 첫 렌더링될 때 실행되는 것을 방지하기 위한 keyword 조건
-    if (keyword !== "" && keyword.length > 5) {
-      console.log("i run when 'keyword' changes.", keyword);
-    }
-  }, [keyword]);
-  useEffect(() => {
-    console.log("i run when 'counter' changes.", counter);
-  }, [counter]);
+
+  // 세번째 방법
+  /*useEffect(function () {
+    console.log("created :)");
+    return function () {
+      console.log("destroyed :(");
+    };
+  }, []);*/
+
+  return <h1>Hello</h1>;
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
   return (
     <div>
-      <input
-        value={keyword}
-        onChange={onChange}
-        type="text"
-        placeholder="Search here..."
-      />
-      <h1>{counter}</h1>
-      <button onClick={onClick}>Click me</button>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
