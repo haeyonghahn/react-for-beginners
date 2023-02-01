@@ -34,6 +34,7 @@
    * **[To Do List part Two](#to-do-list-part-two)**
    * **[Coin Tracker](#coin-tracker)**
    * **[Movie App part One](#movie-app-part-one)**
+   * **[Movie App part Two](#movie-app-part-two)**
 
 ## The Basics of React
 ### Before React
@@ -1110,6 +1111,109 @@ function App() {
       )}
     </div>
   );
+}
+
+export default App;
+```
+
+### Movie App part Two
+`Movie App part Two` 는 `Movie App part One` 의 연장선이다.   
+
+__project structure__   
+```
+📦 create-react-app
+ ┣ 📂 public
+ ┣ 📂 src
+ ┃ ┣ 📂 components
+ ┃ ┃ ┗ 📜 Movie.js
+ ┃ ┣ 📂 routes
+ ┃ ┃ ┣ 📜 Detail.js
+ ┃ ┃ ┗ 📜 Home.js
+ ┃ ┣ 📜 App.js
+ ┣ 📜 package-lock.json
+ ┗ 📜 package.json
+```
+__Movie.js__   
+```javascript
+import PropTypes from "prop-types";
+
+function Movie({ coverImg, title, summary, genres }) {
+  return (
+    <div>
+      <img src={coverImg} alt={title} />
+      <h2>{title}</h2>
+      <p>{summary}</p>
+      <ul>
+        {genres.map((g) => (
+          <li key={g}>{g}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+Movie.propTypes = {
+  coverImg: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default Movie;
+```
+__Detail.js__   
+```javascript
+function Detail() {
+  return <h1>Detail</h1>;
+}
+export default Detail;
+```
+__Home.js__   
+```javascript
+import { useEffect, useState } from "react";
+import Movie from "../components/Movie";
+
+function Home() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year`
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
+  useEffect(() => {
+    getMovies();
+  }, []);
+  return (
+    <div>
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div>
+          {movies.map((movie) => (
+            <Movie
+              key={movie.id}
+              coverImg={movie.medium_cover_image}
+              title={movie.title}
+              summary={movie.summary}
+              genres={movie.genres}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+export default Home;
+```
+__App.js__   
+```javascript
+function App() {
+  return null;
 }
 
 export default App;
