@@ -29,6 +29,10 @@
    * **[useEffect](#useeffect)**
    * **[useEffect를 더 깊게 알아보기](#useeffect를-더-깊게-알아보기)**
    * **[Cleanup function](#cleanup-function)**
+* **[PRACTICE MOVIE APP](#practice-movie-app)**
+   * **[To Do List part One](#to-do-list-part-one)**
+   * **[To Do List part Two](#to-do-list-part-two)**
+   * **[Coin Tracker](#coin-tracker)**
 
 ## The Basics of React
 ### Before React
@@ -930,6 +934,133 @@ function App() {
     <div>
       {showing ? <Hello /> : null}
       <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## PRACTICE MOVIE APP
+### To Do List part One
+수정하는 함수를 사용할 때 두가지 옵션이 있다.   
+1. 단순히 값만 보내는 방식 
+```javascript
+setToDo("");
+```
+2. 단순히 값만 보내는 것이 아니라 함수를 보내는 방식이다.
+```javascript
+setToDos((currentArray) => [toDo, ...currentArray]);
+```
+```javascript
+import { useState, useEffect } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (toDo === "") {
+      return;
+    }
+    setToDos((currentArray) => [toDo, ...currentArray]);
+    setToDo("");
+  };
+  return (
+    <div>
+      <h1>My To Dos ({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          value={toDo}
+          type="text"
+          placeholder="Write your to do..."
+        />
+        <button>Add To Do</button>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### To Do List part Two
+이번 내용에서는 array(`toDos`) 로부터 동일한 컴포넌트에 있는 많은 것들을 `render` 할 수 있는 방법을 알아 보자. 다시 말하면,   
+![image](https://user-images.githubusercontent.com/31242766/215973178-cd2f772e-f088-4057-b3f6-e5256bee78b0.png)   
+배열에 있는 요소를 각각의 컴포넌트로 만드는 작업을 해보자.
+
+> 참고 : 컴포넌트의 리스트를 `render` 할 때에는 `key` 라는 prop 을 넣어주어야 한다. 그리고 `key` 는 유일해야 한다.
+
+```javascript
+import { useState, useEffect } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (toDo === "") {
+      return;
+    }
+    setToDos((currentArray) => [toDo, ...currentArray]);
+    setToDo("");
+  };
+  console.log(toDos);
+  return (
+    <div>
+      <h1>My To Dos ({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          value={toDo}
+          type="text"
+          placeholder="Write your to do..."
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr />
+      {toDos.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Coin Tracker
+```javascript
+import { useState, useEffect } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+      .then((response) => response.json())
+      .then((json) => {
+        setCoins(json);
+        setLoading(false);
+      });
+  }, []);
+  return (
+    <div>
+      <h1>The Conins! {loading ? "" : `(${coins.length})`}</h1>
+      {loading ? (
+        <strong>Loding...</strong>
+      ) : (
+        <select>
+          {coins.map((coin, index) => (
+            <option>
+              {coin.name} ({coin.symbol}): {coin.quotes.USD.price} USD
+            </option>
+          ))}
+        </select>
+      )}
     </div>
   );
 }
