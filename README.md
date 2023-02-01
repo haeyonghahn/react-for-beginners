@@ -1221,7 +1221,67 @@ export default App;
 ```
 
 ### React Router
-__React Router 버전 :__
+__React Router 버전 : 6.8.0__
 ```console
 npm i react-router-dom
+```
+__하이퍼링크의 문제__   
+화면 전체가 재실행된다. React Router 에서 제공하는 `<Link />` 를 사용하자.
+```javascript
+<a href="/movie">{title}</a>
+```
+__Movie.js__   
+```javascript
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+
+function Movie({ coverImg, title, summary, genres }) {
+  return (
+    <div>
+      <img src={coverImg} alt={title} />
+      <h2>
+        <Link to="/movie">{title}</Link>
+      </h2>
+      <p>{summary}</p>
+      <ul>
+        {genres.map((g) => (
+          <li key={g}>{g}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+Movie.propTypes = {
+  coverImg: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default Movie;
+```
+__App.js__   
+```javascript
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Home from "./routes/Home";
+import Detail from "./routes/Detail";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "movie",
+    element: <Detail />,
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router}></RouterProvider>;
+}
+
+export default App;
 ```
