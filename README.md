@@ -1288,6 +1288,7 @@ export default App;
 ```
 
 ### Parameters
+`Parameters` 는 `Movie App part Two` 와 `React Router` 의 연장선이다.
 ```javascript
 <Link to={`/movie/${id}`}>{title}</Link>
 ```
