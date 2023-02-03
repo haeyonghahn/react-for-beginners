@@ -1128,34 +1128,47 @@ __project structure__
  ┣ 📂 public
  ┣ 📂 src
  ┃ ┣ 📂 components
- ┃ ┃ ┗ 📜 Movie.js
+ ┃ ┃ ┣ 📜 Movie.js
+ ┃ ┃ ┗ 📜 Movie.module.css
  ┃ ┣ 📂 routes
  ┃ ┃ ┣ 📜 Detail.js
- ┃ ┃ ┗ 📜 Home.js
+ ┃ ┃ ┣ 📜 Home.js
+ ┃ ┃ ┗ 📜 Home.module.css
  ┃ ┣ 📜 App.js
+ ┃ ┣ 📜 App.module.css
+ ┃ ┣ 📜 index.js
+ ┃ ┗ 📜 styles.css
  ┣ 📜 package-lock.json
  ┗ 📜 package.json
 ```
 __Movie.js__   
 ```javascript
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import styles from "./Movie.module.css";
 
-function Movie({ coverImg, title, summary, genres }) {
+function Movie({ id, coverImg, title, year, summary, genres }) {
   return (
-    <div>
-      <img src={coverImg} alt={title} />
-      <h2>{title}</h2>
-      <p>{summary}</p>
-      <ul>
-        {genres.map((g) => (
-          <li key={g}>{g}</li>
-        ))}
-      </ul>
+    <div className={styles.movie}>
+      <img src={coverImg} alt={title} className={styles.movie__img} />
+      <div>
+        <h2 className={styles.movie__title}>
+          <Link to={`/movie/${id}`}>{title}</Link>
+        </h2>
+        <h3 className={styles.movie__year}>{year}</h3>
+        <p>{summary.length > 235 ? `${summary.slice(0, 235)}...` : summary}</p>
+        <ul className={styles.movie__genres}>
+          {genres.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
 
 Movie.propTypes = {
+  id: PropTypes.number.isRequired,
   coverImg: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   summary: PropTypes.string.isRequired,
@@ -1164,9 +1177,79 @@ Movie.propTypes = {
 
 export default Movie;
 ```
+__Movie.module.css__   
+```css
+.movie {
+  background-color: white;
+  margin-bottom: 70px;
+  font-weight: 300;
+  padding: 20px;
+  border-radius: 5px;
+  color: #adaeb9;
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) 2fr;
+  grid-gap: 20px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+    0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+}
+
+.movie__img {
+  position: relative;
+  top: -50px;
+  max-width: 150px;
+  width: 100%;
+  margin-right: 30px;
+  box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25),
+    0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
+}
+
+.movie__title,
+.movie__year {
+  margin: 0;
+  font-weight: 300;
+  text-decoration: none;
+}
+
+.movie__title a {
+  margin-bottom: 5px;
+  font-size: 24px;
+  color: #2c2c2c;
+  text-decoration: none;
+}
+
+.movie__genres {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0px;
+}
+
+.movie__genres li,
+.movie__year {
+  margin-right: 10px;
+  font-size: 14px;
+}
+```
 __Detail.js__   
 ```javascript
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
 function Detail() {
+  const { id } = useParams();
+  const getMovie = async () => {
+    const json = await (
+      await fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${id}`)
+    ).json();
+    console.log(json);
+  };
+  useEffect(() => {
+    getMovie();
+  }, []);
   return <h1>Detail</h1>;
 }
 export default Detail;
@@ -1175,6 +1258,7 @@ __Home.js__
 ```javascript
 import { useEffect, useState } from "react";
 import Movie from "../components/Movie";
+import styles from "./Home.module.css";
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -1192,14 +1276,18 @@ function Home() {
     getMovies();
   }, []);
   return (
-    <div>
+    <div className={styles.container}>
       {loading ? (
-        <h1>Loading...</h1>
+        <div className={styles.loader}>
+          <h1>Loading...</h1>
+        </div>
       ) : (
-        <div>
+        <div className={styles.movies}>
           {movies.map((movie) => (
             <Movie
               key={movie.id}
+              id={movie.id}
+              year={movie.year}
               coverImg={movie.medium_cover_image}
               title={movie.title}
               summary={movie.summary}
@@ -1213,13 +1301,99 @@ function Home() {
 }
 export default Home;
 ```
+__Home.module.css__    
+```javascript
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 300;
+}
+
+.movies {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(400px, 1fr));
+  grid-gap: 100px;
+  padding: 50px;
+  width: 80%;
+  padding-top: 70px;
+}
+
+@media screen and (max-width: 1090px) {
+  .movies {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+```
 __App.js__   
 ```javascript
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import Home from "./routes/Home";
+import Detail from "./routes/Detail";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "movie/:id",
+    element: <Detail />,
+  },
+]);
+
 function App() {
-  return null;
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;
+```
+__App.module.css__   
+```javascript
+.title {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 18px;
+}
+```
+__index.js__   
+```javascript
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./styles.css";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
+);
+```
+__styles.css__   
+```javascript
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #eff3f7;
+  height: 100%;
+}
 ```
 
 ### React Router
@@ -1342,3 +1516,83 @@ export default Detail;
 ```
 
 ### Styles
+__Home.module.css__   
+```css
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 300;
+}
+
+.movies {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(400px, 1fr));
+  grid-gap: 100px;
+  padding: 50px;
+  width: 80%;
+  padding-top: 70px;
+}
+
+@media screen and (max-width: 1090px) {
+  .movies {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+```
+__Home.js__   
+```javascript
+import { useEffect, useState } from "react";
+import Movie from "../components/Movie";
+import styles from "./Home.module.css";
+
+function Home() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year`
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
+  useEffect(() => {
+    getMovies();
+  }, []);
+  return (
+    <div className={styles.container}>
+      {loading ? (
+        <div className={styles.loader}>
+          <h1>Loading...</h1>
+        </div>
+      ) : (
+        <div className={styles.movies}>
+          {movies.map((movie) => (
+            <Movie
+              key={movie.id}
+              id={movie.id}
+              year={movie.year}
+              coverImg={movie.medium_cover_image}
+              title={movie.title}
+              summary={movie.summary}
+              genres={movie.genres}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+export default Home;
+```
