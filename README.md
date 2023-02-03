@@ -37,6 +37,7 @@
    * **[Movie App part Two](#movie-app-part-two)**
    * **[React Router](#react-router)**
    * **[Parameters](#parameters)**
+   * **[Styles](#styles)**
 
 ## The Basics of React
 ### Before React
@@ -1339,3 +1340,5 @@ function Detail() {
 }
 export default Detail;
 ```
+
+### Styles
